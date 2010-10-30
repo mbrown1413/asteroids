@@ -10,7 +10,7 @@
  * Creates a new alien.
  */
 Alien* Alien_new() {
-    Alien* a = calloc(sizeof(Alien), 1);
+    Alien* a = (Alien*) calloc(sizeof(Alien), 1);
     a->x = -7;
     a->y = 10;
     a->yaw = 0;

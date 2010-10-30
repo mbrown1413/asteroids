@@ -35,12 +35,14 @@ typedef struct {
 
     // True if the player is alive, false if dead.
     // This is false for a short period after the player has died, even if the
-    // player has more lives.
+    // player has more extra_lives.
     bool dead;
 
     // Number of extra lives left.  Once this reaches zero, the player will not
     // be able to spawn after the next death.
-    unsigned int lives;
+    unsigned int extra_lives;
+
+    int spawn_timer;
 
 } Player;
 
@@ -48,5 +50,7 @@ Player* Player_new(float x, float y, float r, float g, float b);
 void Player_draw(Player* p);
 Bullet* Player_fire(Player* p);
 void Player_update(Player* p, float screen_width);
+void Player_spawn(Player* p, float x, float y);
+void Player_die(Player* p, List* particles);
 
 #endif

@@ -31,7 +31,7 @@
  * Create a new, empty List.
  */
 List* List_new() {
-    List* l = malloc(sizeof(List));
+    List* l = (List*) malloc(sizeof(List));
 
     l->head = NULL;
     l->tail = NULL;

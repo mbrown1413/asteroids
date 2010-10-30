@@ -14,6 +14,7 @@
 
 #include "player.h"
 #include "bullet.h"
+#include "explosion.h"
 
 /**
  * Player_new
@@ -27,14 +28,9 @@ Player* Player_new(float x, float y, float r, float g, float b) {
     p->mat[2] = b;
     p->mat[3] = 0.0;
 
-    p->x = x;
-    p->y = y;
-    p->dx = 0;
-    p->dy = 0;
-    p->yaw = 90;
-    p->dyaw = 0;
+    p->extra_lives = 3;
 
-    p->lives = 3;
+    Player_spawn(p, 0, 0);
 
     return p;
 }
@@ -109,52 +105,92 @@ Bullet* Player_fire(Player* p) {
  * frame.
  */
 void Player_update(Player* p, float screen_width) {
-    if (p->dead) return;
+    if (p->dead) {
+        if (p->extra_lives > 0) {
 
-    // Update Position
-    p->x += p->dx;
-    p->y += p->dy;
-    p->yaw += p->dyaw * TURN_RATE;
-
-    // Sanity check of x, y
-    if (p->x > screen_width/2) {
-        p->x -= screen_width;
-    } else if (p->x < -screen_width/2) {
-        p->x += screen_width;
-    }
-    if (p->y > screen_width/2) {
-        p->y -= screen_width;
-    } else if (p->y < -screen_width/2) {
-        p->y += screen_width;
-    }
-
-    // Update velocity dx, dy
-    if (p->thrust) {
-        p->dx += cos((PI/180)*p->yaw) * THRUST_ACCELERATION;
-        p->dy += sin((PI/180)*p->yaw) * THRUST_ACCELERATION;
-
-        // Cap velocity
-        #ifdef CAP_VELOCITY
-            float magnitude = sqrt(p->dx*p->dx + p->dy*p->dy);
-            if (magnitude > MAXIMUM_VELOCITY) {
-                // Shorten the vector to it's maximum length
-                // Divide by magnitude to get unit vector, then multiply by
-                // MAXIMUM_VELOCITY
-                p->dx = p->dx / magnitude * MAXIMUM_VELOCITY;
-                p->dy = p->dy / magnitude * MAXIMUM_VELOCITY;
+            p->spawn_timer--;
+            if (p->spawn_timer <= 0) {
+                Player_spawn(p, 0, 0);
             }
+        }
+
+    } else { // not dead
+
+        // Update Position
+        p->x += p->dx;
+        p->y += p->dy;
+        p->yaw += p->dyaw * TURN_RATE;
+
+        // Sanity check of x, y
+        if (p->x > screen_width/2) {
+            p->x -= screen_width;
+        } else if (p->x < -screen_width/2) {
+            p->x += screen_width;
+        }
+        if (p->y > screen_width/2) {
+            p->y -= screen_width;
+        } else if (p->y < -screen_width/2) {
+            p->y += screen_width;
+        }
+
+        // Update velocity dx, dy
+        if (p->thrust) {
+            p->dx += cos((PI/180)*p->yaw) * THRUST_ACCELERATION;
+            p->dy += sin((PI/180)*p->yaw) * THRUST_ACCELERATION;
+
+            // Cap velocity
+            #ifdef CAP_VELOCITY
+                float magnitude = sqrt(p->dx*p->dx + p->dy*p->dy);
+                if (magnitude > MAXIMUM_VELOCITY) {
+                    // Shorten the vector to it's maximum length
+                    // Divide by magnitude to get unit vector, then multiply by
+                    // MAXIMUM_VELOCITY
+                    p->dx = p->dx / magnitude * MAXIMUM_VELOCITY;
+                    p->dy = p->dy / magnitude * MAXIMUM_VELOCITY;
+                }
+            #endif
+        }
+
+        // Friction
+        #ifdef CAP_VELOCITY
+            p->dx *= 0.99;
+            p->dy *= 0.99;
         #endif
+
+        // Cooldown Weapon
+        if (p->weapon_cooldown > 0) {
+            p->weapon_cooldown--;
+        }
+
     }
 
-    // Friction
-    #ifdef CAP_VELOCITY
-        p->dx *= 0.99;
-        p->dy *= 0.99;
-    #endif
+}
 
-    // Cooldown Weapon
-    if (p->weapon_cooldown > 0) {
-        p->weapon_cooldown--;
-    }
+/**
+ * Player_spawn
+ * TODO
+ */
+void Player_spawn(Player* p, float x, float y)
+{
+    p->x = x;
+    p->y = y;
+    p->dx = 0;
+    p->dy = 0;
+    p->yaw = 90;
+    p->dyaw = 0;
 
+    p->dead = false;
+    p->spawn_timer = 0;
+}
+
+/**
+ * Player_die
+ * Kills the given player.
+ */
+void Player_die(Player* p, List* particles)
+{
+    Explosion_new(p->x, p->y, p->dx,
+        p->dy, 1, p->mat, particles);
+    p->dead = true;
+    p->spawn_timer = 100;
 }

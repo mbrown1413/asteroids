@@ -67,13 +67,13 @@ Asteroid* Asteroid_new(
     a->rot_dz = rot_dz;
 
     // Randomize asteroid
-    float max_variance = 0.3;
-    float min_variance = 0.2;
-    float variance = min_variance + (max_variance-min_variance) * (rand()%100)/100.0;
+    float max_variance = 0.3f;
+    float min_variance = 0.2f;
+    float variance = min_variance + (max_variance-min_variance) * (rand()%100)/100.0f;
     for (int i=0; i<sizeof(asteroid_vertices)/sizeof(float); i++) {
         a->vertices[i/3][i%3] =
             asteroid_vertices[i/3][i%3] +
-            variance * ((rand()%200)-100)/100.0;
+            variance * ((rand()%200)-100)/100.0f;
     }
     a->variance = variance;
 
@@ -90,30 +90,30 @@ Asteroid* Asteroid_new_random(float radius, float screen_width) {
     if (rand()%2) {
         if (rand()%2) {
             // Top
-            x = (rand()%1000 / 1000.0) * screen_width - screen_width/2;
+            x = (rand()%1000 / 1000.0f) * screen_width - screen_width/2;
             y = screen_width/2 - radius;
         } else {
             // Bottom
-            x = (rand()%1000 / 1000.0) * screen_width - screen_width/2;
+            x = (rand()%1000 / 1000.0f) * screen_width - screen_width/2;
             y = -screen_width/2 + radius;
         }
     } else {
         if (rand()%2) {
             // Left
             x = -screen_width/2 + radius;
-            y = (rand()%1000 / 1000.0) * screen_width - screen_width/2;
+            y = (rand()%1000 / 1000.0f) * screen_width - screen_width/2;
         } else {
             // Right
             x = screen_width/2 - radius;
-            y = (rand()%1000 / 1000.0) * screen_width - screen_width/2;
+            y = (rand()%1000 / 1000.0f) * screen_width - screen_width/2;
         }
     }
 
-    float dx = (rand()%2000 / 1000.0 - 1) / 5;
-    float dy = (rand()%2000 / 1000.0 - 1) / 5;
-    float rot_dx = rand()%200 / 100.0 - 1;
-    float rot_dy = rand()%200 / 100.0 - 1;
-    float rot_dz = rand()%200 / 100.0 - 1;
+    float dx = (rand()%2000 / 1000.0f - 1) / 5;
+    float dy = (rand()%2000 / 1000.0f - 1) / 5;
+    float rot_dx = rand()%200 / 100.0f - 1;
+    float rot_dy = rand()%200 / 100.0f - 1;
+    float rot_dz = rand()%200 / 100.0f - 1;
 
     // Sanity check of x, y
     if (x > screen_width/2) {
@@ -145,10 +145,10 @@ Asteroid* Asteroid_new_random(float radius, float screen_width) {
  * If the asteroid is vaporized instead of split, NULL is returned.  In this
  * case, the asteroid passed in should be removed.
  */
-Asteroid* Asteroid_split(Asteroid* a, List* particles) {
+Asteroid* Asteroid_split(Asteroid* a, List* particles, float bullet_dx, float bullet_dy) {
 
-    float explosion_color[] = {1.0, 0.0, 0.0, 0.0};
-    Explosion_new(a->x, a->y, a->dx, a->dy, a->radius, explosion_color, particles);
+    float explosion_color[] = {1.0f, 1.0f, 1.0f, 0.0f};
+    Explosion_new(a->x, a->y, a->dx+0.2*bullet_dx, a->dy+0.2*bullet_dy, a->radius, explosion_color, particles);
 
     if (a->radius < 1.5) {
         return NULL;

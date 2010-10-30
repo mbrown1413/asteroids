@@ -39,8 +39,8 @@ void Explosion_new(
         p->y = y + (rand()%2000 / 1000.0 - 1) * size/2;
         p->dx = dx + (rand()%2000 / 1000.0 - 1)/10.0;
         p->dy = dy + (rand()%2000 / 1000.0 - 1)/10.0;
-        p->ddx = (rand()%2000 / 1000.0 - 1)/1000;
-        p->ddy = (rand()%2000 / 1000.0 - 1)/1000;
+        p->ddx = (rand()%2000 / 1000.0 - 1)/500;
+        p->ddy = (rand()%2000 / 1000.0 - 1)/500;
 
         // Color
         p->color[0] = color[0];
@@ -62,7 +62,7 @@ void Explosions_update(List* particles, float screen_width)
 {
     List_start_iteration(particles);
     Particle* p;
-    while ((p = List_next(particles)))
+    while ((p = (Particle*) List_next(particles)))
     {
 
         // Movement

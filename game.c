@@ -16,19 +16,6 @@
 #include "game.h"
 #include "interactions.h"
 
-void print(float x, float y, char* text)
-{
-    float text_color[] = {1.0, 0.0, 1.0, 1.0};
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, text_color);
-    glColor4f(1, 1, 1, 1);
-    glRasterPos2f(x,y);
-    while (*text != '\0') {
-        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, *text);
-        text++;
-    }
-    
-}
-
 Game* Game_new(unsigned int starting_level)
 {
     Game* g = (Game*) malloc(sizeof(Game));
@@ -49,7 +36,6 @@ Game* Game_new(unsigned int starting_level)
 
 void Game_draw(Game* g)
 {
-    print(0, 0, "HELLO");
 }
 
 void Game_update(Game* g)
@@ -80,41 +66,35 @@ void Game_start_level(Game* g, unsigned int level)
     switch (level) {
         case 1:
             g->screen_width = 70;
-            /*
             for (int i=0; i<2; i++) {
                 List_append(g->asteroids, (void*) Asteroid_new_random(2, g->screen_width));
             }
-            */
             for (int i=0; i<1; i++) {
-                List_append(g->asteroids, (void*) Asteroid_new_random(1, g->screen_width));
+                List_append(g->asteroids, (void*) Asteroid_new_random(5, g->screen_width));
             }
         break;
         case 2:
             g->screen_width += 40;
-            /*
-            for (int i=0; i<10; i++) {
-                List_append(g->asteroids, (void*) Asteroid_new_random(1, g->screen_width));
-            }
-            */
-            /*
             for (int i=0; i<2; i++) {
-                List_append(g->asteroids, (void*) Asteroid_new_random(5, g->screen_width));
-            }
-            */
-            for (int i=0; i<10; i++) {
                 List_append(g->asteroids, (void*) Asteroid_new_random(1, g->screen_width));
+            }
+            for (int i=0; i<3; i++) {
+                List_append(g->asteroids, (void*) Asteroid_new_random(5, g->screen_width));
             }
         break;
         case 3:
-            g->screen_width += 100;
-            for (int i=0; i<1; i++) {
-                List_append(g->asteroids, (void*) Asteroid_new_random(10, g->screen_width));
-            }
-            /*
-            for (int i=0; i<5; i++) {
+            g->screen_width += 70;
+            for (int i=0; i<4; i++) {
                 List_append(g->asteroids, (void*) Asteroid_new_random(5, g->screen_width));
             }
-            */
+            for (int i=0; i<2; i++) {
+                List_append(g->asteroids, (void*) Asteroid_new_random(1, g->screen_width));
+            }
+        break;
+        default:
+            for (int i=0; i<6; i++) {
+                List_append(g->asteroids, (void*) Asteroid_new_random(5, g->screen_width));
+            }
         break;
     }
 }

@@ -30,7 +30,7 @@ Asteroid* Asteroid_new(
         float rot_dx, float rot_dy, float rot_dz
     );
 Asteroid* Asteroid_new_random(float radius, float screen_width);
-Asteroid* Asteroid_split(Asteroid* a, List* particles);
+Asteroid* Asteroid_split(Asteroid* a, List* particles, float bullet_dx, float bullet_dy);
 void Asteroid_update(Asteroid* a, float screen_width);
 void Asteroid_update_list(List* asteroids, float screen_width);
 void Asteroid_draw(Asteroid* a);

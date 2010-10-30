@@ -25,6 +25,22 @@ int window_width;
 int view_width;
 
 /**
+ * draw_text
+ * A helper function that draws the text on the screen at the given position.
+ */
+void draw_text(float x, float y, char* text)
+{
+    float text_color[] = {1.0, 0.0, 1.0, 1.0};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, text_color);
+    glColor4f(1, 1, 1, 1);
+    glRasterPos2f(x,y);
+    while (*text != '\0') {
+        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, *text);
+        text++;
+    }
+}
+
+/**
  * reshape
  * Callback for when the window is resized.
  */
@@ -106,6 +122,13 @@ void draw_all(Game* game) {
     draw_objects(game);
     draw_zoom_square(game, desired_camera_distance);
 
+    // Setup projection for HUD
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-10, 10, -10, 10, 1, 10);
+
+    draw_hud(game);
+
     glFlush();
     glutSwapBuffers();
 
@@ -155,6 +178,5 @@ void draw_objects(Game* game) {
  * Draws the HUD (Heads Up Display).
  */
 void draw_hud(Game* game) {
-
+    draw_text(0, 0, "HELLO");
 }
-
