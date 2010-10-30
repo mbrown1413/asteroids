@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = --std=c99 -g -Werror -Wall -pedantic
+CFLAGS = --std=c99 -g -Werror -Wall -pedantic -Iinclude/
 LDFLAGS = -lGL -lGLU -lglut
 
 all: main
