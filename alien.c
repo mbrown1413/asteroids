@@ -11,8 +11,8 @@
  */
 Alien* Alien_new() {
     Alien* a = (Alien*) calloc(sizeof(Alien), 1);
-    a->x = -7;
-    a->y = 10;
+    a->x = 0;
+    a->y = 0;
     a->yaw = 0;
     a->dyaw = 3;
     return a;
@@ -24,6 +24,19 @@ Alien* Alien_new() {
  */
 void Alien_update(Alien* a, float screen_width) {
     a->yaw += a->dyaw;
+}
+
+/**
+ * Alien_update_list
+ * Runs Alien_update() for each alien.
+ */
+void Alien_update_list(List* aliens, float screen_width) {
+    List_start_iteration(aliens);
+    Alien* alien;
+    while ((alien = (Alien*) List_next(aliens)))
+    {
+        Alien_update(alien, screen_width);
+    }
 }
 
 /**
@@ -50,6 +63,19 @@ void Alien_draw(Alien* a) {
     glutSolidTorus(1, .1, 30, 5);
 
     glPopMatrix();
+}
+
+/**
+ * Alien_draw_list
+ * Runs Alien_draw() for each alien.
+ */
+void Alien_draw_list(List* aliens) {
+    List_start_iteration(aliens);
+    Alien* alien;
+    while ((alien = (Alien*) List_next(aliens)))
+    {
+        Alien_draw(alien);
+    }
 }
 
 /**

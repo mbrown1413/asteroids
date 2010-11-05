@@ -42,6 +42,8 @@ typedef struct {
     // be able to spawn after the next death.
     unsigned int extra_lives;
 
+    unsigned int score;
+
     int spawn_timer;
 
 } Player;

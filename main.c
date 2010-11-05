@@ -125,9 +125,9 @@ int main(int argc, char** argv)
     glDisable(GL_TEXTURE_2D);
 
     // Initialize lighting
-    float ambience[] = {1, 1, 1, 0};
+    float ambience[] = {0, 0, 0, 0};
     float light0_position[] = {0, 1, -0.1, 0};
-    float light0_ambience[] = {.0, .0, .0, 1};
+    float light0_ambience[] = {1, 1, 1, 1};
     float light0_diffuse[] = {.8, .8, .8, 1};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambience);
     glLightfv(GL_LIGHT0, GL_POSITION, light0_position);

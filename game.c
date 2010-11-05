@@ -53,7 +53,7 @@ void Game_update(Game* g)
     check_collisions(g->aliens, g->asteroids, g->bullets, g->particles,
         g->player, g->screen_width);
 
-    //Alien_update(alien, g->screen_width);
+    Alien_update_list(g->aliens, g->screen_width);
     Asteroid_update_list(g->asteroids, g->screen_width);
     Bullet_update_list(g->bullets, g->screen_width);
     Explosions_update(g->particles, g->screen_width);
@@ -63,8 +63,13 @@ void Game_update(Game* g)
 
 void Game_start_level(Game* g, unsigned int level)
 {
+    Alien* alien;
     switch (level) {
         case 1:
+            /*
+            alien = Alien_new();
+            List_append(g->aliens, (void*) alien);
+            */
             g->screen_width = 70;
             for (int i=0; i<2; i++) {
                 List_append(g->asteroids, (void*) Asteroid_new_random(2, g->screen_width));

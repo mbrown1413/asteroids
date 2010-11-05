@@ -1,5 +1,6 @@
 
 #include <math.h>
+#include <stdio.h>
 
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -30,12 +31,12 @@ int view_width;
  */
 void draw_text(float x, float y, char* text)
 {
-    float text_color[] = {1.0, 0.0, 1.0, 1.0};
+    float text_color[] = {0.0, 1.0, 0.0, 1.0};
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, text_color);
     glColor4f(1, 1, 1, 1);
     glRasterPos2f(x,y);
     while (*text != '\0') {
-        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, *text);
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, *text);
         text++;
     }
 }
@@ -99,8 +100,27 @@ void draw_zoom_square(Game* game, float desired_camera_distance)
  */
 void draw_all(Game* game) {
 
-    // Determine Camera distance
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
     float desired_camera_distance = 2*(game->screen_width) / (tan((PI/180.0)*FOV_DEGREES));
+
+    draw_hud(game);
+    //glClear(GL_DEPTH_BUFFER_BIT);
+    draw_objects(game, desired_camera_distance);
+    draw_zoom_square(game, desired_camera_distance);
+
+    glFlush();
+    glutSwapBuffers();
+
+}
+
+/**
+ * draw_objects
+ * Draws all physical objects, but not HUD text.
+ */
+void draw_objects(Game* game, float desired_camera_distance) {
+
+    // Determine Camera distance
     if (camera_distance == -1) {
         camera_distance = desired_camera_distance;
     }
@@ -118,29 +138,6 @@ void draw_all(Game* game) {
         0.0, 0, camera_distance,
         0.0, 0.0, 0.0,
         0.0, 1.0, 0.0);
-
-    draw_objects(game);
-    draw_zoom_square(game, desired_camera_distance);
-
-    // Setup projection for HUD
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-10, 10, -10, 10, 1, 10);
-
-    draw_hud(game);
-
-    glFlush();
-    glutSwapBuffers();
-
-}
-
-/**
- * draw_objects
- * Draws all physical objects, but not HUD text.
- */
-void draw_objects(Game* game) {
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     // Draw everything 9 times
     //
@@ -160,7 +157,7 @@ void draw_objects(Game* game) {
             );
 
             // Actual Drawing
-            //Alien_draw(alien);
+            Alien_draw_list(game->aliens);
             Asteroid_draw_list(game->asteroids);
             Bullet_draw_list(game->bullets, game->screen_width);
             Explosions_draw(game->particles);
@@ -178,5 +175,28 @@ void draw_objects(Game* game) {
  * Draws the HUD (Heads Up Display).
  */
 void draw_hud(Game* game) {
-    draw_text(0, 0, "HELLO");
+
+    // Setup projection/camera
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glViewport(0.0, 0.0, view_width, view_width);
+    gluPerspective(FOV_DEGREES, // Field of view
+                   1.0,         // Aspect ratio
+                   1, 4000.0);    // Near and far
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(
+        0.0, 0, 10,
+        0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0);
+
+    char text[50];
+
+    // Lives
+    sprintf(text, "EXTRA LIVES: %d", game->player->extra_lives);
+    draw_text(-6, 6.5, text);
+
+    // Points
+    sprintf(text, "SCORE: %d", game->player->score);
+    draw_text(-3, 6.5, text);
 }

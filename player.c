@@ -29,6 +29,7 @@ Player* Player_new(float x, float y, float r, float g, float b) {
     p->mat[3] = 0.0;
 
     p->extra_lives = 3;
+    p->score = 0;
 
     Player_spawn(p, 0, 0);
 
@@ -180,6 +181,7 @@ void Player_spawn(Player* p, float x, float y)
     p->dyaw = 0;
 
     p->dead = false;
+    p->extra_lives--;
     p->spawn_timer = 0;
 }
 

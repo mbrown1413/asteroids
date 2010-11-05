@@ -53,6 +53,7 @@ void check_collisions(
                         Bullet_free(bullet);
                         List_remove_current(bullets);
 
+                        player->score += 20*asteroid->radius;
                         Asteroid* new_asteroid = Asteroid_split(asteroid, particles, bullet->dx, bullet->dy);
                         if (new_asteroid == NULL) {
                             Asteroid_free(asteroid);
@@ -82,6 +83,7 @@ void check_collisions(
                         d2 < asteroid->radius)
                     {
                         Player_die(player, particles);
+                        player->score += 20*asteroid->radius;
                         Asteroid* new_asteroid = Asteroid_split(asteroid, particles, player->dx, player->dy);
                         if (new_asteroid == NULL) {
                             Asteroid_free(asteroid);
