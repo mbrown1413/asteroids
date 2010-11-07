@@ -16,7 +16,7 @@
 #include "explosion.h"
 #include "player.h"
 #include "game.h"
-#include "interactions.h"
+#include "collisions.h"
 
 #define MENU_ITEM_NEW_GAME 0
 #define MENU_ITEM_QUIT 1

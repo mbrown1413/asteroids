@@ -14,7 +14,7 @@
 #include "explosion.h"
 #include "player.h"
 #include "game.h"
-#include "interactions.h"
+#include "collisions.h"
 
 Game* Game_new(unsigned int starting_level)
 {
