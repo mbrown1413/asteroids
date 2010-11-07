@@ -29,14 +29,14 @@ int view_width;
  * draw_text
  * A helper function that draws the text on the screen at the given position.
  */
-void draw_text(float x, float y, char* text)
+void draw_text(float x, float y, void* font, char* text)
 {
     float text_color[] = {0.0, 1.0, 0.0, 1.0};
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, text_color);
     glColor4f(1, 1, 1, 1);
     glRasterPos2f(x,y);
     while (*text != '\0') {
-        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, *text);
+        glutBitmapCharacter(font, *text);
         text++;
     }
 }
@@ -103,6 +103,9 @@ void draw_all(Game* game) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     float desired_camera_distance = 2*(game->screen_width) / (tan((PI/180.0)*FOV_DEGREES));
+    if (camera_distance > desired_camera_distance) {
+        camera_distance = desired_camera_distance;
+    }
 
     draw_hud(game);
     //glClear(GL_DEPTH_BUFFER_BIT);
@@ -194,9 +197,17 @@ void draw_hud(Game* game) {
 
     // Lives
     sprintf(text, "EXTRA LIVES: %d", game->player->extra_lives);
-    draw_text(-6, 6.5, text);
+    draw_text(-6.4, 6.5, GLUT_BITMAP_9_BY_15, text);
 
     // Points
     sprintf(text, "SCORE: %d", game->player->score);
-    draw_text(-3, 6.5, text);
+    draw_text(-3.4, 6.5, GLUT_BITMAP_9_BY_15, text);
+
+    // Game Over
+    if (game->player->dead && game->player->spawn_timer <= 0)
+    {
+        if (abs(game->player->spawn_timer)%60 > 20) { // Blink
+            draw_text(-1.2, 0, GLUT_BITMAP_TIMES_ROMAN_24, "GAME OVER");
+        }
+    }
 }

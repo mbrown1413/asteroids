@@ -1,20 +1,36 @@
 
+#include <stdio.h>
+#include <math.h>
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
 
 #include "alien.h"
+#include "explosion.h"
+#include "game.h"
+
+#define PI 3.14159265358979
 
 /**
  * Alien_new
  * Creates a new alien.
  */
-Alien* Alien_new() {
+Alien* Alien_new(bool large, float screen_width) {
     Alien* a = (Alien*) calloc(sizeof(Alien), 1);
-    a->x = 0;
-    a->y = 0;
+    if (!a) {
+        printf("Could not allocate memory!\n");
+        printf("    In Alien_new()\n");
+        exit(1);
+    }
+    a->x = 8;
+    a->y = 8;
+    a->dx = 0;
+    a->dy = 0;
     a->yaw = 0;
     a->dyaw = 3;
+    a->large = large;
+    a->weapon_cooldown = 50;
     return a;
 }
 
@@ -22,20 +38,25 @@ Alien* Alien_new() {
  * Alien_update
  * Updates the given alien.
  */
-void Alien_update(Alien* a, float screen_width) {
+void Alien_update(Alien* a, Game* game) {
     a->yaw += a->dyaw;
+    if (a->weapon_cooldown > 0) {
+        a->weapon_cooldown++;
+    } else {
+
+    }
 }
 
 /**
  * Alien_update_list
  * Runs Alien_update() for each alien.
  */
-void Alien_update_list(List* aliens, float screen_width) {
+void Alien_update_list(List* aliens, Game* game) {
     List_start_iteration(aliens);
     Alien* alien;
     while ((alien = (Alien*) List_next(aliens)))
     {
-        Alien_update(alien, screen_width);
+        Alien_update(alien, game);
     }
 }
 
@@ -53,7 +74,6 @@ void Alien_draw(Alien* a) {
 
     // Transforms
     glTranslatef(a->x, a->y, 0.0);
-    //glRotatef(rotate, 4,2,1);
     glRotatef(-45, 1, 0, 0);
     glRotatef(a->yaw, 0, 0, 1);
     glScalef(0.5, 0.5, 0.5);
@@ -76,6 +96,17 @@ void Alien_draw_list(List* aliens) {
     {
         Alien_draw(alien);
     }
+}
+
+/**
+ * Alien_die
+ * Kills the given alien
+ */
+void Alien_die(Alien* alien, List* particles)
+{
+    float alien_material[] = {1.0, 0.0, 0.0};
+    Explosion_new(alien->x, alien->y, 0,
+        0, 4, alien_material, particles);
 }
 
 /**

@@ -32,6 +32,11 @@
  */
 List* List_new() {
     List* l = (List*) malloc(sizeof(List));
+    if (!l) {
+        printf("Could not allocate memory!\n");
+        printf("    In List_new()\n");
+        exit(1);
+    }
 
     l->head = NULL;
     l->tail = NULL;

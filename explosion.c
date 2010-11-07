@@ -30,9 +30,15 @@ void Explosion_new(
     List* particles)
 {
 
-    for (int i=0; i<size*sqrt(size)*25; i++) {
+    int particle_number = size*sqrt(size)*25;
+    for (int i=0; i<particle_number; i++) {
 
         Particle* p = (Particle*) calloc(sizeof(Particle), 1);
+        if (!p) {
+            printf("Could not allocate memory!\n");
+            printf("    In Explosion_new()\n");
+            exit(1);
+        }
 
         // Movement
         p->x = x + (rand()%2000 / 1000.0 - 1) * size/2;
@@ -61,7 +67,8 @@ void Explosion_new(
 void Explosions_update(List* particles, float screen_width)
 {
     List_start_iteration(particles);
-    Particle* p;
+    Particle* p = NULL;
+    List_start_iteration(particles);
     while ((p = (Particle*) List_next(particles)))
     {
 

@@ -53,6 +53,11 @@ Asteroid* Asteroid_new(
     ) {
 
     Asteroid* a = (Asteroid*) malloc(sizeof(Asteroid));
+    if (!a) {
+        printf("Could not allocate memory!\n");
+        printf("    In Asteroid_new()\n");
+        exit(1);
+    }
 
     a->radius = radius;
     a->x = x;
@@ -274,47 +279,9 @@ void Asteroid_draw(Asteroid* a) {
 
     #undef v
 
-/*
-    //#define v(n) glVertex3fv(a->vertices[n]) // Draw an asteroid vertex
-    // Asteroid vertex draw function
-    #define v(n) \
-        glNormal3fv(a->vertices[n]); \
-        glVertex3fv(a->vertices[n])
-
-    // Top Fan
-    glBegin(GL_POLYGON); v(0); v(1); v(2); glEnd();
-    glBegin(GL_POLYGON); v(0); v(2); v(3); glEnd();
-    glBegin(GL_POLYGON); v(0); v(3); v(4); glEnd();
-    glBegin(GL_POLYGON); v(0); v(4); v(5); glEnd();
-    glBegin(GL_POLYGON); v(0); v(5); v(6); glEnd();
-    glBegin(GL_POLYGON); v(0); v(6); v(7); glEnd();
-    glBegin(GL_POLYGON); v(0); v(7); v(8); glEnd();
-    glBegin(GL_POLYGON); v(0); v(8); v(1); glEnd();
-
-    // Connecting the bottom and top circles
-    glBegin(GL_POLYGON); v(1); v(9); glEnd();
-    glBegin(GL_POLYGON); v(2); v(10); glEnd();
-    glBegin(GL_POLYGON); v(3); v(11); glEnd();
-    glBegin(GL_POLYGON); v(4); v(12); glEnd();
-    glBegin(GL_POLYGON); v(5); v(13); glEnd();
-    glBegin(GL_POLYGON); v(6); v(14); glEnd();
-    glBegin(GL_POLYGON); v(7); v(15); glEnd();
-    glBegin(GL_POLYGON); v(8); v(16); glEnd();
-
-    // Bottom Fan
-    glBegin(GL_POLYGON); v(17); v(10); v(9); glEnd();
-    glBegin(GL_POLYGON); v(17); v(11); v(10); glEnd();
-    glBegin(GL_POLYGON); v(17); v(12); v(11); glEnd();
-    glBegin(GL_POLYGON); v(17); v(13); v(12); glEnd();
-    glBegin(GL_POLYGON); v(17); v(14); v(13); glEnd();
-    glBegin(GL_POLYGON); v(17); v(15); v(14); glEnd();
-    glBegin(GL_POLYGON); v(17); v(16); v(15); glEnd();
-    glBegin(GL_POLYGON); v(17); v(9); v(16); glEnd();
-
-    #undef v
-    */
-
     glPopMatrix();
+
+    glEnd();
 
 }
 

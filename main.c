@@ -18,6 +18,9 @@
 #include "game.h"
 #include "interactions.h"
 
+#define MENU_ITEM_NEW_GAME 0
+#define MENU_ITEM_QUIT 1
+
 void update(int d);
 
 Game* game;
@@ -36,7 +39,16 @@ void draw() {
 }
 
 void handle_menu(int item) {
-    exit(0);
+    switch (item) {
+        case MENU_ITEM_QUIT:
+            Game_free(game);
+            exit(0);
+        break;
+        case MENU_ITEM_NEW_GAME:
+            Game_free(game);
+            game = Game_new(1);
+        break;
+    }
 }
 
 void key_special_up(int key, int x, int y) {
@@ -150,7 +162,8 @@ int main(int argc, char** argv)
 
     // Menu
     glutCreateMenu(handle_menu);
-    glutAddMenuEntry("Quit", 0);
+    glutAddMenuEntry("New Game", MENU_ITEM_NEW_GAME);
+    glutAddMenuEntry("Quit", MENU_ITEM_QUIT);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 
     game = Game_new(1);

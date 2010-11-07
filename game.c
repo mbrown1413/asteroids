@@ -19,6 +19,11 @@
 Game* Game_new(unsigned int starting_level)
 {
     Game* g = (Game*) malloc(sizeof(Game));
+    if (!g) {
+        printf("Could not allocate memory!\n");
+        printf("    In Game_new()\n");
+        exit(1);
+    }
     // Create asteroids, players, aliens
     g->aliens = List_new();
     g->asteroids = List_new();
@@ -50,10 +55,9 @@ void Game_update(Game* g)
         }
     }
 
-    check_collisions(g->aliens, g->asteroids, g->bullets, g->particles,
-        g->player, g->screen_width);
+    check_collisions(g);
 
-    Alien_update_list(g->aliens, g->screen_width);
+    Alien_update_list(g->aliens, g);
     Asteroid_update_list(g->asteroids, g->screen_width);
     Bullet_update_list(g->bullets, g->screen_width);
     Explosions_update(g->particles, g->screen_width);
@@ -66,16 +70,21 @@ void Game_start_level(Game* g, unsigned int level)
     Alien* alien;
     switch (level) {
         case 1:
+            g->screen_width = 70;
             /*
-            alien = Alien_new();
+            alien = Alien_new(false, g->screen_width);
             List_append(g->aliens, (void*) alien);
             */
-            g->screen_width = 70;
+            /*
             for (int i=0; i<2; i++) {
                 List_append(g->asteroids, (void*) Asteroid_new_random(2, g->screen_width));
             }
             for (int i=0; i<1; i++) {
                 List_append(g->asteroids, (void*) Asteroid_new_random(5, g->screen_width));
+            }
+            */
+            for (int i=0; i<0; i++) {
+                List_append(g->asteroids, (void*) Asteroid_new_random(1, g->screen_width));
             }
         break;
         case 2:
@@ -106,5 +115,33 @@ void Game_start_level(Game* g, unsigned int level)
 
 void Game_free(Game* g)
 {
-    //TODO
+
+    // Aliens
+    List_start_iteration(g->aliens);
+    Alien* alien;
+    while ((alien = (Alien*) List_next(g->aliens))) {
+        Alien_free(alien);
+    }
+
+    // Asteroids
+    List_start_iteration(g->asteroids);
+    Asteroid* asteroid;
+    while ((asteroid = (Asteroid*) List_next(g->asteroids))) {
+        Asteroid_free(asteroid);
+    }
+
+    // Bullets
+    List_start_iteration(g->bullets);
+    Bullet* bullet;
+    while ((bullet = (Bullet*) List_next(g->bullets))) {
+        Bullet_free(bullet);
+    }
+
+    // Particles
+    List_start_iteration(g->particles);
+    Particle* particle;
+    while ((particle = (Particle*) List_next(g->particles))) {
+        free(particle);
+    }
+
 }

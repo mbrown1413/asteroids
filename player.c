@@ -12,6 +12,7 @@
 
 #define PI 3.1415926535897932384626433832795028841971693993
 
+#include "asteroid.h"
 #include "player.h"
 #include "bullet.h"
 #include "explosion.h"
@@ -22,16 +23,21 @@
  */
 Player* Player_new(float x, float y, float r, float g, float b) {
     Player* p = (Player*) calloc(sizeof(Player), 1);
+    if (!p) {
+        printf("Could not allocate memory!\n");
+        printf("    In Player_new()\n");
+        exit(1);
+    }
 
     p->mat[0] = r;
     p->mat[1] = g;
     p->mat[2] = b;
     p->mat[3] = 0.0;
+    p->dead = true;
 
     p->extra_lives = 3;
     p->score = 0;
-
-    Player_spawn(p, 0, 0);
+    p->spawn_timer = 50;
 
     return p;
 }
@@ -107,9 +113,9 @@ Bullet* Player_fire(Player* p) {
  */
 void Player_update(Player* p, float screen_width) {
     if (p->dead) {
+        p->spawn_timer--;
         if (p->extra_lives > 0) {
 
-            p->spawn_timer--;
             if (p->spawn_timer <= 0) {
                 Player_spawn(p, 0, 0);
             }
@@ -165,6 +171,15 @@ void Player_update(Player* p, float screen_width) {
 
     }
 
+}
+
+/**
+ * Player_destroy_asteroid
+ * Called when the player destroys an asteroid either by a bullet or by running
+ * into the asteroid.
+ */
+void Player_destroy_asteroid(Player* p, Asteroid* asteroid)
+{
 }
 
 /**

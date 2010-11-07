@@ -22,6 +22,11 @@ Bullet* Bullet_new(
     float r, float g, float b
 ) {
     Bullet* bullet = (Bullet*) malloc(sizeof(Bullet));
+    if (!bullet) {
+        printf("Could not allocate memory!\n");
+        printf("    In Bullet_new()\n");
+        exit(1);
+    }
     bullet->x = x;
     bullet->y = y;
     bullet->dx = dx;
