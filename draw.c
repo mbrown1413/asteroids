@@ -178,6 +178,7 @@ void draw_objects(Game* game, float desired_camera_distance) {
  * Draws the HUD (Heads Up Display).
  */
 void draw_hud(Game* game) {
+    Player* player = game->player;
 
     // Setup projection/camera
     glMatrixMode(GL_PROJECTION);
@@ -210,4 +211,21 @@ void draw_hud(Game* game) {
             draw_text(-1.2, 0, GLUT_BITMAP_TIMES_ROMAN_24, "GAME OVER");
         }
     }
+
+    // Weapon Cooldown
+    glScalef(0.05, 1, 1);
+    glTranslatef(30.0, 6.6, 0);
+    float hot_color[] = {1.0, 0.0, 0.0, 1.0};
+    float cold_color[] = {0.0, 1.0, 0.0, 1.0};
+
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, hot_color);
+    glBegin(GL_LINE_STRIP);
+
+        glVertex2f(0, 0);
+        glVertex2f(player->weapon_heat, 0);
+
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cold_color);
+        glVertex2f(player->weapon_cool_point + player->weapon_fire_heat, 0);
+
+    glEnd();
 }

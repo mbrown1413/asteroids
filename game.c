@@ -83,7 +83,7 @@ void Game_start_level(Game* g, unsigned int level)
                 List_append(g->asteroids, (void*) Asteroid_new_random(5, g->screen_width));
             }
             */
-            for (int i=0; i<0; i++) {
+            for (int i=0; i<3; i++) {
                 List_append(g->asteroids, (void*) Asteroid_new_random(1, g->screen_width));
             }
         break;

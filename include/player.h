@@ -30,8 +30,12 @@ typedef struct {
     // thrust is 1 if the ship is being propelled forward.  0 otherwise.
     float thrust;
 
-    // 0 is completely cool, higher numbers are hotter
-    unsigned int weapon_cooldown;
+    // Weapon Cooldown
+    // The rate at which the player can fire is determined by how hot their
+    // weapon is.
+    unsigned int weapon_heat; // 0 is cool, higher is hotter
+    unsigned int weapon_cool_point; // Player can fire when weapon is this cool
+    unsigned int weapon_fire_heat; // Heat generated from fire
 
     // True if the player is alive, false if dead.
     // This is false for a short period after the player has died, even if the

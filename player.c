@@ -35,6 +35,10 @@ Player* Player_new(float x, float y, float r, float g, float b) {
     p->mat[3] = 0.0;
     p->dead = true;
 
+    p->weapon_cool_point = 60;
+    p->weapon_heat = 0;
+    p->weapon_fire_heat = 20;
+
     p->extra_lives = 3;
     p->score = 0;
     p->spawn_timer = 50;
@@ -91,10 +95,10 @@ void Player_draw(Player* p) {
  */
 Bullet* Player_fire(Player* p) {
     if (p->dead) return NULL;
-    if (p->weapon_cooldown >= 50) {
+    if (p->weapon_heat >= p->weapon_cool_point) {
         return NULL;
     }
-    p->weapon_cooldown += 20;
+    p->weapon_heat += p->weapon_fire_heat;
     Bullet* b = Bullet_new(
         p->x,
         p->y,
@@ -112,6 +116,12 @@ Bullet* Player_fire(Player* p) {
  * frame.
  */
 void Player_update(Player* p, float screen_width) {
+
+    // Cooldown Weapon
+    if (p->weapon_heat > 0) {
+        p->weapon_heat--;
+    }
+
     if (p->dead) {
         p->spawn_timer--;
         if (p->extra_lives > 0) {
@@ -164,11 +174,6 @@ void Player_update(Player* p, float screen_width) {
             p->dy *= 0.99;
         #endif
 
-        // Cooldown Weapon
-        if (p->weapon_cooldown > 0) {
-            p->weapon_cooldown--;
-        }
-
     }
 
 }
@@ -194,6 +199,8 @@ void Player_spawn(Player* p, float x, float y)
     p->dy = 0;
     p->yaw = 90;
     p->dyaw = 0;
+
+    p->weapon_heat = 0;
 
     p->dead = false;
     p->extra_lives--;
