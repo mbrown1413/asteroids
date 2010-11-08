@@ -57,7 +57,6 @@ void Player_draw(Player* p) {
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix();
 
-
     // Transforms
     glTranslatef(p->x, p->y, 0);
     glRotatef(p->yaw, 0,0,1);

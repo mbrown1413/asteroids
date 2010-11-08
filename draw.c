@@ -9,6 +9,7 @@
 #include "alien.h"
 #include "asteroid.h"
 #include "bullet.h"
+#include "crystal.h"
 #include "draw.h"
 #include "explosion.h"
 #include "player.h"
@@ -163,6 +164,7 @@ void draw_objects(Game* game, float desired_camera_distance) {
             Alien_draw_list(game->aliens);
             Asteroid_draw_list(game->asteroids);
             Bullet_draw_list(game->bullets, game->screen_width);
+            Crystal_draw_list(game->crystals);
             Explosions_draw(game->particles);
             Player_draw(game->player);
 

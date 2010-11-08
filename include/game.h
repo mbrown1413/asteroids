@@ -14,6 +14,7 @@ typedef struct {
     List* aliens;
     List* asteroids;
     List* bullets;
+    List* crystals;
     List* particles;
     Player* player;
     unsigned int level;

@@ -11,6 +11,7 @@
 #include "alien.h"
 #include "asteroid.h"
 #include "bullet.h"
+#include "crystal.h"
 #include "explosion.h"
 #include "player.h"
 #include "game.h"
@@ -28,6 +29,7 @@ Game* Game_new(unsigned int starting_level)
     g->aliens = List_new();
     g->asteroids = List_new();
     g->bullets = List_new();
+    g->crystals = List_new();
     g->particles = List_new();
     g->player = Player_new(0,0, 0,1,0);
 
@@ -60,6 +62,7 @@ void Game_update(Game* g)
     Alien_update_list(g->aliens, g);
     Asteroid_update_list(g->asteroids, g->screen_width);
     Bullet_update_list(g->bullets, g->screen_width);
+    Crystal_update_list(g->crystals, g->screen_width);
     Explosions_update(g->particles, g->screen_width);
     Player_update(g->player, g->screen_width);
 
@@ -68,9 +71,12 @@ void Game_update(Game* g)
 void Game_start_level(Game* g, unsigned int level)
 {
     Alien* alien;
+    Crystal* crystal;
     switch (level) {
         case 1:
             g->screen_width = 70;
+            //crystal = Crystal_new(0, 0, 0.1, 0.1);
+            //List_append(g->crystals, crystal);
             /*
             alien = Alien_new(false, g->screen_width);
             List_append(g->aliens, (void*) alien);
@@ -135,6 +141,13 @@ void Game_free(Game* g)
     Bullet* bullet;
     while ((bullet = (Bullet*) List_next(g->bullets))) {
         Bullet_free(bullet);
+    }
+
+    // Crystals
+    List_start_iteration(g->crystals);
+    Crystal* crystal;
+    while ((crystal = (Crystal*) List_next(g->crystals))) {
+        Crystal_free(crystal);
     }
 
     // Particles

@@ -9,6 +9,7 @@
 #include "alien.h"
 #include "asteroid.h"
 #include "bullet.h"
+#include "crystal.h"
 #include "explosion.h"
 #include "player.h"
 #include "collisions.h"
@@ -23,6 +24,7 @@ void check_collisions(Game* game) {
     List* aliens = game->aliens;
     List* asteroids = game->asteroids;
     List* bullets = game->bullets;
+    List* crystals = game->crystals;
     List* particles = game->particles;
     Player* player = game->player;
     float screen_width = game->screen_width;
@@ -30,6 +32,7 @@ void check_collisions(Game* game) {
     Asteroid* asteroid;
     Alien* alien;
     Bullet* bullet;
+    Crystal* crystal;
 
     // Bullet Collisions
     List_start_iteration(bullets);
@@ -72,6 +75,11 @@ void check_collisions(Game* game) {
             check_collision_asteroid_alien(game, asteroid, alien);
         }
 
+        // Money <-> Asteroids
+        List_start_iteration(crystals);
+        while ((crystal = (Crystal*) List_next(crystals)))
+        check_collisions_asteroid_crystal(game, asteroid, crystal);
+
     }
 
     // Aliens <-> Players
@@ -96,7 +104,7 @@ bool check_collision_asteroid_bullet(Game* game, Asteroid* asteroid, Bullet* bul
 
                 bullet->frames_to_live = 0;
                 game->player->score += 20*asteroid->radius;
-                Asteroid* new_asteroid = Asteroid_split(asteroid, game->particles, bullet->dx, bullet->dy);
+                Asteroid* new_asteroid = Asteroid_split(asteroid, game->particles, game->crystals, bullet->dx, bullet->dy);
                 if (new_asteroid == NULL) {
                     Asteroid_free(asteroid);
                     List_remove_current(game->asteroids);
@@ -139,7 +147,7 @@ bool check_collision_asteroid_player(Game* game, Asteroid* asteroid, Player* pla
 
                     Player_die(player, game->particles);
                     player->score += 20*asteroid->radius;
-                    Asteroid* new_asteroid = Asteroid_split(asteroid, game->particles, player->dx, player->dy);
+                    Asteroid* new_asteroid = Asteroid_split(asteroid, game->particles, game->crystals, player->dx, player->dy);
                     if (new_asteroid == NULL) {
                         Asteroid_free(asteroid);
                         List_remove_current(game->asteroids);
@@ -166,7 +174,7 @@ bool check_collision_asteroid_alien(Game* game, Asteroid* asteroid, Alien* alien
         Alien_free(alien);
         List_remove_current(game->aliens);
 
-        Asteroid* new_asteroid = Asteroid_split(asteroid, game->particles, alien->dx, alien->dy);
+        Asteroid* new_asteroid = Asteroid_split(asteroid, game->particles, game->crystals, alien->dx, alien->dy);
         if (new_asteroid == NULL) {
             Asteroid_free(asteroid);
             List_remove_current(game->asteroids);
@@ -226,5 +234,17 @@ bool check_collision_alien_bullet(Game* game, Alien* alien, Bullet* bullet)
 }
 
 bool check_collision_bullet_player(Game* game, Bullet* bullet, Player* player)
+{
+}
+
+bool check_collision_bullet_crystal(Game* game, Bullet* bullet, Crystal* crystal)
+{
+}
+
+bool check_collisions_crystal_player(Game* game, Crystal* crystal, Player* player)
+{
+}
+
+bool check_collisions_asteroid_crystal(Game* game, Asteroid* asteroid, Crystal* crystal)
 {
 }

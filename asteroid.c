@@ -6,6 +6,7 @@
 #include <GL/gl.h>
 
 #include "asteroid.h"
+#include "crystal.h"
 #include "explosion.h"
 #include "linked_list.h"
 
@@ -150,10 +151,14 @@ Asteroid* Asteroid_new_random(float radius, float screen_width) {
  * If the asteroid is vaporized instead of split, NULL is returned.  In this
  * case, the asteroid passed in should be removed.
  */
-Asteroid* Asteroid_split(Asteroid* a, List* particles, float bullet_dx, float bullet_dy) {
+Asteroid* Asteroid_split(Asteroid* a, List* particles, List* crystals, float bullet_dx, float bullet_dy) {
 
     float explosion_color[] = {1.0f, 1.0f, 1.0f, 0.0f};
     Explosion_new(a->x, a->y, a->dx+0.2*bullet_dx, a->dy+0.2*bullet_dy, a->radius, explosion_color, particles);
+
+    // Create Crystal
+    Crystal* crystal = Crystal_new(a->x, a->y, a->dx, a->dy);
+    List_append(crystals, crystal);
 
     if (a->radius < 1.5) {
         return NULL;
@@ -236,7 +241,7 @@ void Asteroid_draw(Asteroid* a) {
     glRotatef(a->rot_y, 0,1,0);
     glRotatef(a->rot_z, 0,0,1);
 
-    // Asteroid vertex draw function
+    // Asteroid vertex draw shortcut
     #define v(n) \
         glNormal3fv(a->vertices[n]); \
         glVertex3f(-a->vertices[n][0], -a->vertices[n][1], -a->vertices[n][2])
@@ -249,15 +254,6 @@ void Asteroid_draw(Asteroid* a) {
         v(1);
     glEnd();
 
-    // Connecting the top and bottom circles
-    /*
-    glBegin(GL_QUAD_STRIP);
-        for (int i=1; i<=8; i++) {
-            v(i); v(i+8);
-        }
-        v(1); v(9);
-    glEnd();
-    */
     glBegin(GL_TRIANGLES);
         for (int i=1; i<=7; i++) {
             v(i); v(i+9); v(i+1);

@@ -4,7 +4,7 @@ LDFLAGS = -lGL -lGLU -lglut
 
 all: main
 
-main: main.c asteroid.o draw.o player.o alien.o bullet.o linked_list.o collisions.o game.o explosion.o
+main: main.c asteroid.o draw.o player.o alien.o bullet.o linked_list.o collisions.o game.o explosion.o crystal.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $+ -o main
 
 %.o: %.c %.h
