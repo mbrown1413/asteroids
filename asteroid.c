@@ -157,8 +157,8 @@ Asteroid* Asteroid_split(Asteroid* a, List* particles, List* crystals, float bul
     Explosion_new(a->x, a->y, a->dx+0.2*bullet_dx, a->dy+0.2*bullet_dy, a->radius, explosion_color, particles);
 
     // Create Crystal
-    Crystal* crystal = Crystal_new(a->x, a->y, a->dx, a->dy);
-    List_append(crystals, crystal);
+    //Crystal* crystal = Crystal_new(a->x, a->y, a->dx, a->dy);
+    //List_append(crystals, crystal);
 
     if (a->radius < 1.5) {
         return NULL;

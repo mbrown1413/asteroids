@@ -19,7 +19,8 @@ Bullet* Bullet_new(
     float x, float y,
     float dx, float dy,
     int frames_to_live,
-    float r, float g, float b
+    float r, float g, float b,
+    void* owner
 ) {
     Bullet* bullet = (Bullet*) malloc(sizeof(Bullet));
     if (!bullet) {
@@ -35,6 +36,7 @@ Bullet* Bullet_new(
     bullet->color[1] = g;
     bullet->color[2] = b;
     bullet->frames_to_live = frames_to_live;
+    bullet->owner = owner;
     return bullet;
 }
 

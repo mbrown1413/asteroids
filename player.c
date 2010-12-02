@@ -104,7 +104,8 @@ Bullet* Player_fire(Player* p) {
         BULLET_VELOCITY * cos((PI/180)*p->yaw) + p->dx,
         BULLET_VELOCITY * sin((PI/180)*p->yaw) + p->dy,
         BULLET_LIFETIME,
-        p->mat[0], p->mat[1], p->mat[2]
+        p->mat[0], p->mat[1], p->mat[2],
+        (void*) p
     );
     return b;
 }

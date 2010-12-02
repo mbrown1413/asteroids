@@ -8,8 +8,6 @@
 
 typedef struct {
 
-    //TODO: color
-
     // Position, orientation
     float x, y;
     float dx, dy;
@@ -18,13 +16,16 @@ typedef struct {
     // The number of frames until this bullet is destroyed.
     int frames_to_live;
 
+    void* owner; // Pointer to the object that owns this bullet
+
 } Bullet;
 
 Bullet* Bullet_new(
     float x, float y,
     float dx, float dy,
     int frames_to_live,
-    float r, float g, float b
+    float r, float g, float b,
+    void* owner
 );
 void Bullet_draw(Bullet* b, float screen_width);
 void Bullet_draw_list(List* bullets, float screen_width);

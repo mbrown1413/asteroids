@@ -224,6 +224,7 @@ bool check_collision_alien_player(Game* game, Alien* alien, Player* player)
 
 bool check_collision_alien_bullet(Game* game, Alien* alien, Bullet* bullet)
 {
+    if ((void*) alien == bullet->owner) return false;
     float d = distance(alien->x, alien->y, bullet->x, bullet->y);
     if (d < 3.1) {
         Alien_die(alien, game->particles);

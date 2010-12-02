@@ -77,10 +77,8 @@ void Game_start_level(Game* g, unsigned int level)
             g->screen_width = 70;
             //crystal = Crystal_new(0, 0, 0.1, 0.1);
             //List_append(g->crystals, crystal);
-            /*
             alien = Alien_new(false, g->screen_width);
             List_append(g->aliens, (void*) alien);
-            */
             /*
             for (int i=0; i<2; i++) {
                 List_append(g->asteroids, (void*) Asteroid_new_random(2, g->screen_width));
@@ -90,11 +88,13 @@ void Game_start_level(Game* g, unsigned int level)
             }
             */
             for (int i=0; i<3; i++) {
-                List_append(g->asteroids, (void*) Asteroid_new_random(1, g->screen_width));
+                List_append(g->asteroids, (void*) Asteroid_new_random(5, g->screen_width));
             }
         break;
         case 2:
             g->screen_width += 40;
+            alien = Alien_new(false, g->screen_width);
+            List_append(g->aliens, (void*) alien);
             for (int i=0; i<2; i++) {
                 List_append(g->asteroids, (void*) Asteroid_new_random(1, g->screen_width));
             }
