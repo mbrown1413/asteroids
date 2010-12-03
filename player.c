@@ -221,3 +221,15 @@ void Player_die(Player* p, List* particles)
     p->dead = true;
     p->spawn_timer = 100;
 }
+
+/**
+ * Player_score
+ * Increaces the score of the player by the given amount.
+ */
+void Player_score(Player* p, unsigned int score)
+{
+    if ((p->score+score)%EXTRA_LIVE_SCORE <= p->score%EXTRA_LIVE_SCORE) {
+        p->extra_lives++;
+    }
+    p->score += score;
+}

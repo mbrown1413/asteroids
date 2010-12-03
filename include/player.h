@@ -12,6 +12,7 @@
 #define MAXIMUM_VELOCITY 1
 #define BULLET_LIFETIME 30
 #define BULLET_VELOCITY 1.5
+#define EXTRA_LIVE_SCORE 4000
 
 typedef struct {
 
@@ -58,5 +59,6 @@ Bullet* Player_fire(Player* p);
 void Player_update(Player* p, float screen_width);
 void Player_spawn(Player* p, float x, float y);
 void Player_die(Player* p, List* particles);
+void Player_score(Player* p, unsigned int score);
 
 #endif

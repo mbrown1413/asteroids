@@ -103,7 +103,7 @@ bool check_collision_asteroid_bullet(Game* game, Asteroid* asteroid, Bullet* bul
             {
 
                 bullet->frames_to_live = 0;
-                game->player->score += 20*asteroid->radius;
+                Player_score(game->player, 20*asteroid->radius);
                 Asteroid* new_asteroid = Asteroid_split(asteroid, game->particles, game->crystals, bullet->dx, bullet->dy);
                 if (new_asteroid == NULL) {
                     Asteroid_free(asteroid);
@@ -146,7 +146,7 @@ bool check_collision_asteroid_player(Game* game, Asteroid* asteroid, Player* pla
                 {
 
                     Player_die(player, game->particles);
-                    player->score += 20*asteroid->radius;
+                    Player_score(game->player, 20*asteroid->radius);
                     Asteroid* new_asteroid = Asteroid_split(asteroid, game->particles, game->crystals, player->dx, player->dy);
                     if (new_asteroid == NULL) {
                         Asteroid_free(asteroid);
@@ -173,9 +173,9 @@ bool check_collision_asteroid_alien(Game* game, Asteroid* asteroid, Alien* alien
         Alien_free(alien);
         List_remove_current(game->aliens);
         if (alien->large) {
-            game->player->score += 200;
+            Player_score(game->player, 200);
         } else {
-            game->player->score += 5000;
+            Player_score(game->player, 4000);
         }
 
         Asteroid* new_asteroid = Asteroid_split(asteroid, game->particles, game->crystals, alien->dx, alien->dy);
@@ -214,15 +214,15 @@ bool check_collision_alien_player(Game* game, Alien* alien, Player* player)
 
                     Player_die(player, game->particles);
                     if (alien->large) {
-                        player->score += 200;
+                        Player_score(player, 200);
                     } else {
-                        player->score += 4000;
+                        Player_score(player, 4000);
                     }
                     Alien_die(alien, game->particles);
                     Alien_free(alien);
                     List_remove_current(game->aliens);
 
-                    game->player->score += 200;
+                    Player_score(player, 200);
                     return true;
                 }
             }
@@ -243,9 +243,9 @@ bool check_collision_alien_bullet(Game* game, Alien* alien, Bullet* bullet)
             if (d < 3.1) {
                 Alien_die(alien, game->particles);
                 if (alien->large) {
-                    game->player->score += 200;
+                    Player_score(game->player, 200);
                 } else {
-                    game->player->score += 4000;
+                    Player_score(game->player, 4000);
                 }
                 List_remove_current(game->aliens);
                 bullet->frames_to_live = 0;
