@@ -47,7 +47,8 @@ void Game_draw(Game* g)
 
 void Game_update(Game* g)
 {
-    if (g->asteroids->length == 0 && g->aliens->length == 0)
+    //if (g->asteroids->length == 0 && g->aliens->length == 0)
+    if (g->asteroids->length == 0)
     {
         g->level_start_timer++;
         if (g->level_start_timer > LEVEL_START_DELAY) {
@@ -77,7 +78,7 @@ void Game_start_level(Game* g, unsigned int level)
             g->screen_width = 70;
             //crystal = Crystal_new(0, 0, 0.1, 0.1);
             //List_append(g->crystals, crystal);
-            alien = Alien_new(false, g->screen_width);
+            alien = Alien_new(true, g->screen_width);
             List_append(g->aliens, (void*) alien);
             /*
             for (int i=0; i<2; i++) {
@@ -87,33 +88,43 @@ void Game_start_level(Game* g, unsigned int level)
                 List_append(g->asteroids, (void*) Asteroid_new_random(5, g->screen_width));
             }
             */
+            /*
             for (int i=0; i<3; i++) {
                 List_append(g->asteroids, (void*) Asteroid_new_random(5, g->screen_width));
             }
+            */
         break;
         case 2:
             g->screen_width += 40;
-            alien = Alien_new(false, g->screen_width);
+            alien = Alien_new(true, g->screen_width);
             List_append(g->aliens, (void*) alien);
-            for (int i=0; i<2; i++) {
-                List_append(g->asteroids, (void*) Asteroid_new_random(1, g->screen_width));
-            }
-            for (int i=0; i<3; i++) {
+            /*
+            for (int i=0; i<4; i++) {
                 List_append(g->asteroids, (void*) Asteroid_new_random(5, g->screen_width));
             }
+            */
         break;
         case 3:
-            g->screen_width += 70;
+            g->screen_width += 40;
             for (int i=0; i<4; i++) {
                 List_append(g->asteroids, (void*) Asteroid_new_random(5, g->screen_width));
             }
             for (int i=0; i<2; i++) {
                 List_append(g->asteroids, (void*) Asteroid_new_random(1, g->screen_width));
             }
+            alien = Alien_new(false, g->screen_width);
+            List_append(g->aliens, (void*) alien);
         break;
         default:
             for (int i=0; i<6; i++) {
                 List_append(g->asteroids, (void*) Asteroid_new_random(5, g->screen_width));
+            }
+            if (rand()%2) {
+                alien = Alien_new(false, g->screen_width);
+                List_append(g->aliens, (void*) alien);
+            } else {
+                alien = Alien_new(true, g->screen_width);
+                List_append(g->aliens, (void*) alien);
             }
         break;
     }

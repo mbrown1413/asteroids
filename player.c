@@ -35,9 +35,9 @@ Player* Player_new(float x, float y, float r, float g, float b) {
     p->mat[3] = 0.0;
     p->dead = true;
 
-    p->weapon_cool_point = 60;
+    p->weapon_cool_point = 80;
     p->weapon_heat = 0;
-    p->weapon_fire_heat = 20;
+    p->weapon_fire_heat = 15;
 
     p->extra_lives = 3;
     p->score = 0;
@@ -182,6 +182,8 @@ void Player_update(Player* p, float screen_width) {
  * Player_destroy_asteroid
  * Called when the player destroys an asteroid either by a bullet or by running
  * into the asteroid.
+ *
+ * TODO: Don't think this is used.
  */
 void Player_destroy_asteroid(Player* p, Asteroid* asteroid)
 {
@@ -213,6 +215,7 @@ void Player_spawn(Player* p, float x, float y)
  */
 void Player_die(Player* p, List* particles)
 {
+    if (p->dead) return;
     Explosion_new(p->x, p->y, p->dx,
         p->dy, 1, p->mat, particles);
     p->dead = true;

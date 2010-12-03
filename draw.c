@@ -216,7 +216,7 @@ void draw_hud(Game* game) {
         }
     }
 
-    // Weapon Cooldown
+    // Weapon Cooldown Meter
     glScalef(0.05, 1, 1);
     glTranslatef(30.0, 6.6, 0);
     float hot_color[] = {1.0, 0.0, 0.0, 1.0};

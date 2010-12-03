@@ -30,7 +30,7 @@ void Explosion_new(
     List* particles)
 {
 
-    int particle_number = size*sqrt(size)*25;
+    int particle_number = size*sqrt(size)*15;
     for (int i=0; i<particle_number; i++) {
 
         Particle* p = (Particle*) calloc(sizeof(Particle), 1);
