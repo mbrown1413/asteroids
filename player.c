@@ -107,6 +107,11 @@ Bullet* Player_fire(Player* p) {
         p->mat[0], p->mat[1], p->mat[2],
         (void*) p
     );
+
+    // Kickback
+    p->dx -= BULLET_KICKBACK * cos((PI/180)*p->yaw);
+    p->dy -= BULLET_KICKBACK * sin((PI/180)*p->yaw);
+
     return b;
 }
 

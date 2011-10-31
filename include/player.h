@@ -13,6 +13,7 @@
 #define BULLET_LIFETIME 30
 #define BULLET_VELOCITY 1.5
 #define EXTRA_LIVE_SCORE 4000
+#define BULLET_KICKBACK 0.01
 
 typedef struct {
 
