@@ -5,7 +5,7 @@
 
 void reshape(int w, int h);
 void draw_all(Game* game);
-void draw_objects(Game* game, float desired_camera_distance);
+void draw_objects(Game* game);
 void draw_hud(Game* game);
 
 #endif

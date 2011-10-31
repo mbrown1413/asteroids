@@ -55,7 +55,7 @@ void List_append(List* l, void* data)
     struct ListNode* node = (struct ListNode*) malloc(sizeof(struct ListNode));
     node->data = data;
     node->next = NULL;
-    
+
     if (l->length == 0) {
         l->head = node;
     } else {

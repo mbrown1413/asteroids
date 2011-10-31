@@ -17,14 +17,11 @@
 
 #define PI 3.14159265358979
 
-#define FOV_DEGREES 70
-
 // Static variables
-float camera_distance = -1;
 int zoom_square_width;
 int window_height;
 int window_width;
-int view_width;
+float view_width = 0;
 
 /**
  * draw_text
@@ -53,9 +50,9 @@ void reshape(int w, int h)
 
     // Clip the viewport so it's a square within the window.
     if (window_width > window_height) {
-        view_width = window_height;
+        window_width = window_height;
     } else {
-        view_width = window_width;
+        window_width = window_width;
     }
 
     glMatrixMode(GL_PROJECTION);
@@ -70,16 +67,16 @@ void reshape(int w, int h)
  *
  * This is meant to put things in perspective while no asteroids are around.
  */
-void draw_zoom_square(Game* game, float desired_camera_distance)
+void draw_zoom_square(Game* game, float desired_view_width)
 {
-    if (fabs(desired_camera_distance - camera_distance) > 0.5) {
+    if (fabs(desired_view_width - view_width) > 0.5) {
         // Zoom square is visible
 
         // Move camera closer to desired position
-        camera_distance += 0.03*(desired_camera_distance - camera_distance);
+        view_width += 0.06*(desired_view_width - view_width);
 
         // Draw square
-        float alpha = ((desired_camera_distance - camera_distance))/100.0;
+        float alpha = ((desired_view_width - view_width))/100.0;
         float square_mat[] = {alpha, alpha, alpha}; // Color will be grey
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, square_mat);
         glBegin(GL_LINE_LOOP);
@@ -90,7 +87,7 @@ void draw_zoom_square(Game* game, float desired_camera_distance)
         glEnd();
 
     } else { // Zoom square NOT visible
-        camera_distance = desired_camera_distance;
+        view_width = desired_view_width;
         zoom_square_width = game->screen_width;
     }
 }
@@ -101,17 +98,11 @@ void draw_zoom_square(Game* game, float desired_camera_distance)
  */
 void draw_all(Game* game) {
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
-    float desired_camera_distance = 2*(game->screen_width) / (tan((PI/180.0)*FOV_DEGREES));
-    if (camera_distance > desired_camera_distance) {
-        camera_distance = desired_camera_distance;
-    }
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     draw_hud(game);
-    //glClear(GL_DEPTH_BUFFER_BIT);
-    draw_objects(game, desired_camera_distance);
-    draw_zoom_square(game, desired_camera_distance);
+    draw_objects(game);
+    draw_zoom_square(game, game->screen_width);
 
     glFlush();
     glutSwapBuffers();
@@ -122,29 +113,21 @@ void draw_all(Game* game) {
  * draw_objects
  * Draws all physical objects, but not HUD text.
  */
-void draw_objects(Game* game, float desired_camera_distance) {
-
-    // Determine Camera distance
-    if (camera_distance == -1) {
-        camera_distance = desired_camera_distance;
-    }
+void draw_objects(Game* game) {
 
     // Setup projection/camera
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glViewport(0.0, 0.0, view_width, view_width);
-    gluPerspective(FOV_DEGREES, // Field of view
-                   1.0,         // Aspect ratio
-                   1, 4000.0);    // Near and far
+    glViewport(0.0, 0.0, window_width, window_width);
+    glOrtho(-view_width/2, view_width/2, -view_width/2, view_width/2, 0.0, 4000);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(
-        0.0, 0, camera_distance,
+        0.0, 0, 10,
         0.0, 0.0, 0.0,
         0.0, 1.0, 0.0);
 
     // Draw everything 9 times
-    //
     // This creates the screen wrapping effect.  When something moves off of
     // the screen in one direction, another drawing enters on the opposite
     // side.  When updating x and y for each item, they have to add or subtract
@@ -187,10 +170,8 @@ void draw_hud(Game* game) {
     // Setup projection/camera
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glViewport(0.0, 0.0, view_width, view_width);
-    gluPerspective(FOV_DEGREES, // Field of view
-                   1.0,         // Aspect ratio
-                   1, 4000.0);    // Near and far
+    glViewport(0.0, 0.0, window_width, window_width);
+    glOrtho(-10, 10, -10, 10, 1, 4000);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(
@@ -202,23 +183,23 @@ void draw_hud(Game* game) {
 
     // Lives
     sprintf(text, "EXTRA LIVES: %d", game->player->extra_lives);
-    draw_text(-6.4, 6.5, GLUT_BITMAP_9_BY_15, text);
+    draw_text(-9.5, 9.0, GLUT_BITMAP_9_BY_15, text);
 
     // Points
     sprintf(text, "SCORE: %d", game->player->score);
-    draw_text(-3.4, 6.5, GLUT_BITMAP_9_BY_15, text);
+    draw_text(-4.5, 9.0, GLUT_BITMAP_9_BY_15, text);
 
     // Game Over
     if (game->player->dead && game->player->spawn_timer <= 0)
     {
         if (abs(game->player->spawn_timer)%60 > 20) { // Blink
-            draw_text(-1.2, 0, GLUT_BITMAP_TIMES_ROMAN_24, "GAME OVER");
+            draw_text(-2.2, 0, GLUT_BITMAP_TIMES_ROMAN_24, "GAME OVER");
         }
     }
 
     // Weapon Cooldown Meter
-    glScalef(0.05, 1, 1);
-    glTranslatef(30.0, 6.6, 0);
+    glScalef(0.09, 1, 1);
+    glTranslatef(2.5, 9.2, 0);
     float hot_color[] = {1.0, 0.0, 0.0, 1.0};
     float cold_color[] = {0.0, 1.0, 0.0, 1.0};
 
