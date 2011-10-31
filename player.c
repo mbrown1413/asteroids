@@ -184,17 +184,6 @@ void Player_update(Player* p, float screen_width) {
 }
 
 /**
- * Player_destroy_asteroid
- * Called when the player destroys an asteroid either by a bullet or by running
- * into the asteroid.
- *
- * TODO: Don't think this is used.
- */
-void Player_destroy_asteroid(Player* p, Asteroid* asteroid)
-{
-}
-
-/**
  * Player_spawn
  * TODO
  */
@@ -205,7 +194,6 @@ void Player_spawn(Player* p, float x, float y)
     p->dx = 0;
     p->dy = 0;
     p->yaw = 90;
-    p->dyaw = 0;
 
     p->weapon_heat = 0;
 

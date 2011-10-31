@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <math.h>
 #include <time.h>
 
@@ -21,9 +22,13 @@
 #define MENU_ITEM_NEW_GAME 0
 #define MENU_ITEM_QUIT 1
 
+#define CLAMP(low, n, high) ((n)>=(high) ? (high) : ((n)<=(low)?(low):(n)))
+
 void update(int d);
 
+// Static Variables
 Game* game;
+bool player_firing = false;
 
 void update(int d) {
     glutTimerFunc(20, update, 0);
@@ -79,24 +84,34 @@ void key_special_down(int key, int x, int y) {
     }
 }
 
+void fire_callback(int delay) {
+    if (player_firing) {
+        Bullet* b;
+        b = Player_fire(game->player);
+        if (b != NULL) {
+            List_append(game->bullets, (void*) b);
+        }
+        glutTimerFunc(delay, fire_callback, delay);
+    }
+}
+
 void key_down(unsigned char key, int x, int y) {
-    Bullet* b;
     switch (key) {
         case 'x':
             game->player->thrust = 1;
         break;
         case 'z':
         case ' ':
-            b = Player_fire(game->player);
-            if (b != NULL) {
-                List_append(game->bullets, (void*) b);
+            if (!player_firing) {
+                player_firing = true;
+                fire_callback(150);
             }
         break;
         case 'h':
-            game->player->dyaw = 1;
+            game->player->dyaw = CLAMP(-1, game->player->dyaw+1, 1);
         break;
         case 'l':
-            game->player->dyaw = -1;
+            game->player->dyaw = CLAMP(-1, game->player->dyaw-1, 1);
         break;
     }
 }
@@ -107,10 +122,14 @@ void key_up(unsigned char key, int x, int y) {
             game->player->thrust = 0;
         break;
         case 'h':
-            game->player->dyaw = 0;
+            game->player->dyaw = CLAMP(-1, game->player->dyaw-1, 1);
         break;
         case 'l':
-            game->player->dyaw = 0;
+            game->player->dyaw = CLAMP(-1, game->player->dyaw+1, 1);
+        break;
+        case 'z':
+        case ' ':
+            player_firing = false;
         break;
     }
 }
@@ -161,6 +180,7 @@ int main(int argc, char** argv)
     glutKeyboardUpFunc( key_up );
 
     // Menu
+    glutIgnoreKeyRepeat(1);
     glutCreateMenu(handle_menu);
     glutAddMenuEntry("New Game", MENU_ITEM_NEW_GAME);
     glutAddMenuEntry("Quit", MENU_ITEM_QUIT);
