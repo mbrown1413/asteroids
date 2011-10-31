@@ -79,13 +79,21 @@ void Explosions_update(List* particles, float screen_width)
         p->y += p->dy;
         p->dx *= 0.99;
         p->dy *= 0.99;
-        if (fabs(p->x) > screen_width/2) p->x = -p->x;
-        if (fabs(p->y) > screen_width/2) p->y = -p->y;
+        if (p->x > screen_width/2) {
+            p->x -= screen_width;
+        } else if (p->x < -screen_width/2) {
+            p->x += screen_width;
+        }
+        if (p->y > screen_width/2) {
+            p->y -= screen_width;
+        } else if (p->y < -screen_width/2) {
+            p->y += screen_width;
+        }
 
         // Color degrade
-        p->color[0] -= 0.01;
-        p->color[1] -= 0.01;
-        p->color[2] -= 0.01;
+        p->color[0] -= 0.001;
+        p->color[1] -= 0.001;
+        p->color[2] -= 0.001;
         p->color[0] *= 0.99;
         p->color[1] *= 0.99;
         p->color[2] *= 0.99;
